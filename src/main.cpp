@@ -29,6 +29,7 @@
 						// On Linux include <unistd.h>. On Windows include <io.h>
 #include <set>
 #include <experimental/filesystem>
+#include <gflags/gflags.h>
 
 #include "Hungarian.h"
 #include "KalmanTracker.h"
@@ -40,6 +41,8 @@ using namespace std;
 using namespace cv;
 
 #define DATA_DIR string("/home/ubuntu/Workspace/datasets/2DMOT2015/")
+
+DEFINE_bool(display, true, "Display tracking result");
 
 typedef struct TrackingBox
 {
@@ -71,15 +74,17 @@ void TestSORT(string seqName, bool display);
 
 
 
-int main()
+int main(int argc, char** argv)
 {
+	gflags::ParseCommandLineFlags(&argc, &argv, true);
+
 	vector<string> sequences = {
 		"PETS09-S2L1", "TUD-Campus", "TUD-Stadtmitte", "ETH-Bahnhof",
 		"ETH-Sunnyday", "ETH-Pedcross2", "KITTI-13", "KITTI-17",
 		"ADL-Rundle-6", "ADL-Rundle-8", "Venice-2"
 	};
 	for (auto seq : sequences)
-		TestSORT(seq, false);
+		TestSORT(seq, FLAGS_display);
 	// TestSORT("PETS09-S2L1", true);
 
 	// Note: time counted here is of tracking procedure, 

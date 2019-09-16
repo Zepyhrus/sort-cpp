@@ -1,2 +1,3 @@
-./build/bin/SORT
+./build/src/SORT \
+    --display=true
 
