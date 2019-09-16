@@ -39,7 +39,7 @@
 using namespace std;
 using namespace cv;
 
-
+#define DATA_DIR string("/home/ubuntu/Workspace/datasets/2DMOT2015/")
 
 typedef struct TrackingBox
 {
@@ -111,7 +111,7 @@ void TestSORT(string seqName, bool display)
 	for (int i = 0; i < CNUM; i++)
 		rng.fill(randColor[i], RNG::UNIFORM, 0, 256);
 
-	string imgPath = "D:/Data/Track/2DMOT2015/train/" + seqName + "/img1/";
+	string imgPath = DATA_DIR + "train/" + seqName + "/img1/";
 
 	if (display)
 		if (_access(imgPath.c_str(), 0) == -1)
@@ -122,7 +122,7 @@ void TestSORT(string seqName, bool display)
 
 	// 1. read detection file
 	ifstream detectionFile;
-	string detFileName = "data/" + seqName + "/det.txt";
+	string detFileName = DATA_DIR + "train/" + seqName + "/det/det.txt";
 	detectionFile.open(detFileName);
 
 	if (!detectionFile.is_open())
