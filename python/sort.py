@@ -296,7 +296,7 @@ if __name__ == '__main__':
   for seq in sequences:
     mot_tracker = SORT(max_age=5, min_hits=5) # create instance of the SORT tracker
      # load detections
-    seq_dets = np.loadtxt('src/data/%s/det.txt' % (seq), delimiter=',')
+    seq_dets = np.loadtxt('mot_benchmark/train/%s/det/det.txt' % (seq), delimiter=',')
     with open('output/%s.txt' % (seq),'w') as out_file:
       print("Processing %s." % (seq))
       for frame in range(int(seq_dets[:,0].max())):

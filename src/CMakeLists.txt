@@ -10,7 +10,7 @@ message(STATUS "OPENCV libs: " ${OpenCV_LIBS})
 # using gflag
 find_package(gflags REQUIRED)
 
-add_executable(SORT validate.cpp Hungarian.cpp KalmanTracker.cpp)
+add_executable(SORT main.cpp Hungarian.cpp KalmanTracker.cpp)
 
 
 target_link_libraries(SORT ${OpenCV_LIBS})

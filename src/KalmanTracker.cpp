@@ -49,7 +49,12 @@ StateType KalmanTracker::predict()
 		m_hit_streak = 0;
 	m_time_since_update += 1;
 
-	StateType predictBox = get_rect_xysr(p.at<float>(0, 0), p.at<float>(1, 0), p.at<float>(2, 0), p.at<float>(3, 0));
+	StateType predictBox = get_rect_xysr(
+		p.at<float>(0, 0),
+		p.at<float>(1, 0),
+		p.at<float>(2, 0),
+		p.at<float>(3, 0)
+	);
 
 	m_history.push_back(predictBox);
 	return m_history.back();
@@ -79,7 +84,12 @@ void KalmanTracker::update(StateType stateMat)
 StateType KalmanTracker::get_state()
 {
 	Mat s = kf.statePost;
-	return get_rect_xysr(s.at<float>(0, 0), s.at<float>(1, 0), s.at<float>(2, 0), s.at<float>(3, 0));
+	return get_rect_xysr(
+		s.at<float>(0, 0),
+		s.at<float>(1, 0),
+		s.at<float>(2, 0),
+		s.at<float>(3, 0)
+	);
 }
 
 
