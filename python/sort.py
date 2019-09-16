@@ -22,6 +22,8 @@ import os.path
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+plt.rcParams['figure.autolayout'] = True
+
 from skimage import io
 from scipy.optimize import linear_sum_assignment
 import glob
@@ -292,13 +294,13 @@ if __name__ == '__main__':
     os.makedirs('output')
   
   for seq in sequences:
-    mot_tracker = SORT() # create instance of the SORT tracker
+    mot_tracker = SORT(max_age=5, min_hits=5) # create instance of the SORT tracker
      # load detections
     seq_dets = np.loadtxt('src/data/%s/det.txt' % (seq), delimiter=',')
     with open('output/%s.txt' % (seq),'w') as out_file:
       print("Processing %s." % (seq))
       for frame in range(int(seq_dets[:,0].max())):
-        time.sleep(0.1)
+        # time.sleep(0.1)
         frame += 1 # detection and frame numbers begin at 1
         dets = seq_dets[seq_dets[:,0]==frame,2:7]
         dets[:,2:4] += dets[:,0:2] # convert to [x1,y1,w,h] to [x1,y1,x2,y2]

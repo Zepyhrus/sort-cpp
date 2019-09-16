@@ -66,7 +66,7 @@ double GetIOU(Rect_<float> bb_test, Rect_<float> bb_gt)
 
 
 // global variables for counting
-#define CNUM 20
+#define CNUM 32
 int total_frames = 0;
 double total_time = 0.0;
 
@@ -177,8 +177,8 @@ void TestSORT(string seqName, bool display)
 
 	// 3. update across frames
 	int frame_count = 0;
-	int max_age = 1;
-	int min_hits = 3;
+	int max_age = 5;
+	int min_hits = 5;
 	double iouThreshold = 0.3;
 	vector<KalmanTracker> trackers;
 	KalmanTracker::kf_count = 0; // tracking id relies on this, so we have to reset it in each seq.
@@ -218,8 +218,10 @@ void TestSORT(string seqName, bool display)
 		frame_count++;
 		//cout << frame_count << endl;
 
-		// I used to count running time using clock(), but found it seems to conflict with cv::cvWaitkey(),
-		// when they both exists, clock() can not get right result. Now I use cv::getTickCount() instead.
+		// I used to count running time using clock(), but found it seems to 
+		//	conflict with cv::cvWaitkey(),
+		// when they both exists, clock() can not get right result.
+		//	Now I use cv::getTickCount() instead.
 		start_time = getTickCount();
 
 		if (trackers.size() == 0) // the first frame met
@@ -234,12 +236,13 @@ void TestSORT(string seqName, bool display)
 			for (unsigned int id = 0; id < detFrameData[fi].size(); id++)
 			{
 				TrackingBox tb = detFrameData[fi][id];
-				resultsFile << tb.frame << "," << id + 1 << "," << tb.box.x << "," << tb.box.y << "," << tb.box.width << "," << tb.box.height << ",1,-1,-1,-1" << endl;
+				resultsFile << tb.frame << "," << id + 1 << "," << tb.box.x << ","
+							<< tb.box.y << "," << tb.box.width << "," << tb.box.height
+							<< ",1,-1,-1,-1" << endl;
 			}
 			continue;
 		}
 
-		///////////////////////////////////////
 		// 3.1. get predicted locations from existing trackers.
 		predictedBoxes.clear();
 
@@ -383,7 +386,8 @@ void TestSORT(string seqName, bool display)
 			for (auto tb : frameTrackingResult)
 				cv::rectangle(img, tb.box, randColor[tb.id % CNUM], 2, 8, 0);
 			imshow(seqName, img);
-			cvWaitKey(40);
+			char key = cvWaitKey(40);
+			if (key ==  27) { break; }
 		}
 	}
 
@@ -392,3 +396,48 @@ void TestSORT(string seqName, bool display)
 	if (display)
 		destroyAllWindows();
 }
+
+
+
+
+//									    /|
+//									   / |
+//									  //||
+//									 // ||
+//									//	||
+//								   // 	||
+//								  //  	||
+//								 //   	||
+//								//    	||
+//							   //     	||
+//							  //      	||
+//							 //       	||
+//							//        	||
+//						   //         	||
+//						  //          	||
+//						 //           	||
+//						//            	||
+//					   //	          	||
+//					  //	          	||
+//					 //		       		||
+//					//					||
+//			       //					||
+//			      //					||
+//			     //						||
+//			    //						||
+//			   //						||
+//			  //						||
+//			 //							||
+//			//							||
+//	       //							||
+//	      //							||
+//	     //								||
+//	    //								||
+//	   //								||
+//    //								||
+//   //									||
+//  //									||
+// //									||
+////									||
+///										||
+//										||
