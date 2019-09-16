@@ -23,9 +23,11 @@ void mouseEvent(int event, int x, int y, int flags, void *param)
 
 void TestKF();
 
-void main()
+int main()
 {
 	TestKF();
+
+    return 0;
 }
 
 
@@ -76,7 +78,7 @@ void TestKF()
 		circle(img, statePt, 8, CV_RGB(255, 0, 0), -1); // current position as red
 
 		imshow("Kalman", img);
-		char code = (char)waitKey(100);
+		char code = (char) waitKey(100);
 		if (code == 27 || code == 'q' || code == 'Q')
 			break;
 	}
