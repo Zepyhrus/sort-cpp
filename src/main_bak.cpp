@@ -67,6 +67,8 @@ double GetIOU(Rect_<float> bb_test, Rect_<float> bb_gt)
 
 // global variables for counting
 #define CNUM 32
+int total_frames = 0;
+double total_time = 0.0;
 
 void TestSORT(string seqName, bool display);
 
@@ -83,6 +85,14 @@ int main(int argc, char** argv)
 	};
 	for (auto seq : sequences)
 		TestSORT(seq, FLAGS_display);
+	// TestSORT("PETS09-S2L1", true);
+
+	// Note: time counted here is of tracking procedure, 
+	// while the running speed bottleneck is opening and parsing detectionFile.
+	cout 	<< "Total Tracking took: " << total_time
+		 	<< " for " << total_frames << " frames or "
+		 	<< ((double)total_frames / (double)total_time)
+			<< " FPS" << endl;
 
 	return 0;
 }
@@ -187,12 +197,30 @@ void TestSORT(string seqName, bool display)
 	double cycle_time = 0.0;
 	int64 start_time = 0;
 
+	// prepare result file.
+	ofstream resultsFile;
+	string resFileName = "output/" + seqName + ".txt";
+	resultsFile.open(resFileName);
+
+	if (!resultsFile.is_open())
+	{
+		cerr << "Error: can not create file " << resFileName << endl;
+		return;
+	}
+
 	//////////////////////////////////////////////
 	// main loop
 	for (int fi = 0; fi < maxFrame; fi++)	// loop over frame
 	{
+		total_frames++;
 		frame_count++;
 		//cout << frame_count << endl;
+
+		// I used to count running time using clock(), but found it seems to 
+		//	conflict with cv::cvWaitkey(),
+		// when they both exists, clock() can not get right result.
+		//	Now I use cv::getTickCount() instead.
+		start_time = getTickCount();
 
 		if (trackers.size() == 0) // the first frame met
 		{
@@ -201,6 +229,14 @@ void TestSORT(string seqName, bool display)
 			{
 				KalmanTracker trk = KalmanTracker(detFrameData[fi][i].box);
 				trackers.push_back(trk);
+			}
+			// output the first frame detections
+			for (unsigned int id = 0; id < detFrameData[fi].size(); id++)
+			{
+				TrackingBox tb = detFrameData[fi][id];
+				resultsFile << tb.frame << "," << id + 1 << "," << tb.box.x << ","
+							<< tb.box.y << "," << tb.box.width << "," << tb.box.height
+							<< ",1,-1,-1,-1" << endl;
 			}
 			continue;
 		}
@@ -331,6 +367,11 @@ void TestSORT(string seqName, bool display)
 				it = trackers.erase(it);
 		}
 
+		cycle_time = (double)(getTickCount() - start_time);
+		total_time += cycle_time / getTickFrequency();
+
+		for (auto tb : frameTrackingResult)
+			resultsFile << tb.frame << "," << tb.id << "," << tb.box.x << "," << tb.box.y << "," << tb.box.width << "," << tb.box.height << ",1,-1,-1,-1" << endl;
 
 		if (display) // read image, draw results and show them
 		{
@@ -344,6 +385,7 @@ void TestSORT(string seqName, bool display)
 			{
 				auto color = randColor[tb.id % CNUM];
 				rectangle(img, tb.box, randColor[tb.id % CNUM], 2, 8, 0);
+				putText(img, to_string(tb.id), Point(tb.box.x, tb.box.y), 1, 0.5, color);
 			}
 
 			imshow(seqName, img);
@@ -352,6 +394,7 @@ void TestSORT(string seqName, bool display)
 		}
 	}
 
+	resultsFile.close();
 
 	if (display)
 		destroyAllWindows();
