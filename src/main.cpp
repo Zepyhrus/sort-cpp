@@ -138,9 +138,12 @@ void TestSORT(string seqName, bool display)
 
 	string detLine;
 	istringstream ss;
-	vector<TrackingBox> detData;
+	vector<TrackingBox> detData;		// a huge detect vector containing all the detections
 	char ch;
 	float tpx, tpy, tpw, tph;
+
+	// 2. get all detection result and find the max frame number
+	int maxFrame = 0;
 
 	while ( getline(detectionFile, detLine) )
 	{
@@ -153,18 +156,13 @@ void TestSORT(string seqName, bool display)
 
 		tb.box = Rect_<float>(Point_<float>(tpx, tpy), Point_<float>(tpx + tpw, tpy + tph));
 		detData.push_back(tb);
+
+		if (maxFrame < tb.frame) { maxFrame = tb.frame; }
 	}
 	detectionFile.close();
 
 	// 2. group detData by frame
-	int maxFrame = 0;
-	for (auto tb : detData) // find max frame number
-	{
-		if (maxFrame < tb.frame)
-			maxFrame = tb.frame;
-	}
-
-	vector<vector<TrackingBox>> detFrameData;
+	vector<vector<TrackingBox>> detFrameData;	// every detection frame is a TrackingBox vector
 	vector<TrackingBox> tempVec;
 	for (int fi = 0; fi < maxFrame; fi++)
 	{
@@ -212,7 +210,7 @@ void TestSORT(string seqName, bool display)
 
 	//////////////////////////////////////////////
 	// main loop
-	for (int fi = 0; fi < maxFrame; fi++)
+	for (int fi = 0; fi < maxFrame; fi++)	// loop over frame
 	{
 		total_frames++;
 		frame_count++;
