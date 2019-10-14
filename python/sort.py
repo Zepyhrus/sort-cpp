@@ -213,7 +213,7 @@ class SORT(object):
     self.trackers = []
     self.frame_count = 0
 
-  def update(self,dets):
+  def update(self, dets):
     """
     Params:
       dets - a numpy array of detections in the format [[x1,y1,x2,y2,score],[x1,y1,x2,y2,score],...]

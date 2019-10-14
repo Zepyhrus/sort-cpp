@@ -25,8 +25,9 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip> // to format image names using setw() and setfill()
+
+// On Linux include <unistd.h>. On Windows include <io.h>
 #include <unistd.h>    	// to check file existence using POSIX function access().
-						// On Linux include <unistd.h>. On Windows include <io.h>
 #include <set>
 #include <experimental/filesystem>
 #include <gflags/gflags.h>
@@ -44,6 +45,8 @@ using namespace cv;
 
 DEFINE_bool(display, true, "Display tracking result");
 
+
+// equvilent to face_t in FRP project
 typedef struct TrackingBox
 {
 	int frame;

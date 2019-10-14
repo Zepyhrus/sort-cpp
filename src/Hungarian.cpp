@@ -17,6 +17,8 @@
 HungarianAlgorithm::HungarianAlgorithm(){}
 HungarianAlgorithm::~HungarianAlgorithm(){}
 
+using namespace std;
+
 
 //********************************************************//
 // A single function wrapper for solving assignment problem.
