@@ -41,7 +41,7 @@
 using namespace std;
 using namespace cv;
 
-#define DATA_DIR string("/home/ubuntu/Workspace/datasets/2DMOT2015/")
+#define DATA_DIR string("/home/ubuntu/Datasets/MOT/2DMOT2015/")
 
 DEFINE_bool(display, true, "Display tracking result");
 
