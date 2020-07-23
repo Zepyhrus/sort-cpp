@@ -54,7 +54,8 @@ double HungarianAlgorithm::Solve(vector<vector<double>>& DistMatrix, vector<int>
 
 
 //********************************************************//
-// Solve optimal solution for assignment problem using Munkres algorithm, also known as Hungarian Algorithm.
+// Solve optimal solution for assignment problem using 
+// Munkres algorithm, also known as Hungarian Algorithm.
 //********************************************************//
 void HungarianAlgorithm::assignmentoptimal(int *assignment, double *cost, double *distMatrixIn, int nOfRows, int nOfColumns)
 {
